@@ -1,4 +1,8 @@
-import { assemblySteps } from '../animations/assemblySteps';
+interface StepInfo {
+  id: number;
+  title: string;
+  description: string;
+}
 
 interface StepControlsProps {
   currentStep: number;
@@ -7,6 +11,8 @@ interface StepControlsProps {
   onPrev: () => void;
   onNext: () => void;
   onReset: () => void;
+  steps: StepInfo[];
+  productName: string;
 }
 
 export function StepControls({
@@ -16,18 +22,20 @@ export function StepControls({
   onPrev,
   onNext,
   onReset,
+  steps,
+  productName,
 }: StepControlsProps) {
-  const step = assemblySteps[currentStep];
+  const step = steps[currentStep];
 
   return (
     <div className="step-panel">
       <div className="step-header">
-        <h1>KALLAX 2×2</h1>
+        <h1>{productName}</h1>
         <p className="subtitle">Assembly Guide</p>
       </div>
 
       <div className="step-progress">
-        {assemblySteps.map((s) => (
+        {steps.map((s) => (
           <div
             key={s.id}
             className={`step-dot ${s.id === currentStep ? 'active' : ''} ${

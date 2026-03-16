@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { AssemblyViewer } from './components/AssemblyViewer';
+import { LundtoftViewer } from './components/LundtoftViewer';
 
 function App() {
   const [activeGuide, setActiveGuide] = useState('kallax-2x2');
@@ -9,7 +10,8 @@ function App() {
     <div className="app-layout">
       <Sidebar activeGuide={activeGuide} onSelect={setActiveGuide} />
       <div className="app-content">
-        {activeGuide === 'kallax-2x2' && <AssemblyViewer />}
+        {activeGuide === 'kallax-2x2' && <AssemblyViewer key="kallax" />}
+        {activeGuide === 'lundtoft' && <LundtoftViewer key="lundtoft" />}
       </div>
     </div>
   );

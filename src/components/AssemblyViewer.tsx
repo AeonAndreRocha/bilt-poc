@@ -67,6 +67,8 @@ export function AssemblyViewer() {
         onPrev={handlePrev}
         onNext={handleNext}
         onReset={handleReset}
+        steps={assemblySteps}
+        productName="KALLAX 2×2"
       />
     </div>
   );

@@ -17,6 +17,11 @@ const catalog: Category[] = [
     label: 'IKEA',
     guides: [{ id: 'kallax-2x2', label: 'KALLAX 2×2' }],
   },
+  {
+    id: 'jysk',
+    label: 'JYSK',
+    guides: [{ id: 'lundtoft', label: 'LUNDTOFT Side Table' }],
+  },
 ];
 
 interface SidebarProps {
@@ -25,7 +30,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeGuide, onSelect }: SidebarProps) {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({ ikea: true });
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({ ikea: true, jysk: true });
 
   const toggle = (catId: string) =>
     setExpanded((prev) => ({ ...prev, [catId]: !prev[catId] }));
