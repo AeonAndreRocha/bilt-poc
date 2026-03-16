@@ -53,16 +53,21 @@ function showDowels(dowels: Mesh[], indices: number[]) {
 const a = getAssembledPositions();
 
 /*
- * Assembly order (IKEA-style, built on its side then stood up):
+ * Assembly order with separate dowel steps:
  *
- *  0. Overview — exploded view of all 7 panels
- *  1. Lay bottom panel flat
- *  2. Attach left & right side walls
- *  3. Insert bottom-row vertical divider
- *  4. Slide in horizontal middle shelf
- *  5. Insert top-row vertical divider
- *  6. Close with top panel
- *  7. Complete!
+ *  0.  Overview — exploded view
+ *  1.  Lay bottom panel flat
+ *  2.  Insert dowels into bottom panel (for side walls)
+ *  3.  Attach side walls
+ *  4.  Insert dowels into bottom panel (for center divider)
+ *  5.  Place bottom-row divider
+ *  6.  Insert dowels on top of divider (for shelf)
+ *  7.  Slide in horizontal shelf
+ *  8.  Insert dowels on shelf (for top divider)
+ *  9.  Place top-row divider
+ *  10. Insert dowels for top panel
+ *  11. Attach top panel
+ *  12. Complete!
  */
 
 export const assemblySteps: AssemblyStep[] = [
@@ -90,54 +95,92 @@ export const assemblySteps: AssemblyStep[] = [
     },
   },
 
-  // ── Step 2: Side walls ────────────────────────────────────────────
+  // ── Step 2: Dowels for side walls ─────────────────────────────────
   {
     id: 2,
-    title: 'Attach Side Walls',
+    title: 'Insert Dowels for Side Walls',
     description:
-      'Insert dowels and attach the left and right side walls to the bottom panel.',
+      'Push 4 wooden dowels into the pre-drilled holes near the left and right edges of the bottom panel.',
     animate: async (scene, parts) => {
       showDowels(parts.dowels, [2, 3, 4, 5]);
-      await animateAll(scene, [
-        { mesh: parts.leftWall,  target: a.leftWall },
-        { mesh: parts.rightWall, target: a.rightWall },
-        ...([2, 3, 4, 5].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] }))),
-      ]);
+      await animateAll(scene, [2, 3, 4, 5].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] })), 45);
     },
     setup: (parts) => {
-      parts.leftWall.position  = a.leftWall.clone();
-      parts.rightWall.position = a.rightWall.clone();
       showDowels(parts.dowels, [2, 3, 4, 5]);
       [2, 3, 4, 5].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
     },
   },
 
-  // ── Step 3: Bottom-row divider ────────────────────────────────────
+  // ── Step 3: Attach side walls ─────────────────────────────────────
   {
     id: 3,
-    title: 'Place Bottom-Row Divider',
+    title: 'Attach Side Walls',
     description:
-      'Insert dowels into the short vertical divider and place it between the side walls. This splits the bottom row into two cubes.',
+      'Lower the left and right side walls onto the dowels. Press firmly until flush with the bottom panel.',
     animate: async (scene, parts) => {
-      showDowels(parts.dowels, [0, 1, 6, 7]);
       await animateAll(scene, [
-        { mesh: parts.vDivBottom, target: a.vDivBottom },
-        ...([0, 1, 6, 7].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] }))),
-      ], 50);
+        { mesh: parts.leftWall,  target: a.leftWall },
+        { mesh: parts.rightWall, target: a.rightWall },
+      ]);
     },
     setup: (parts) => {
-      parts.vDivBottom.position = a.vDivBottom.clone();
-      showDowels(parts.dowels, [0, 1, 6, 7]);
-      [0, 1, 6, 7].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
+      parts.leftWall.position  = a.leftWall.clone();
+      parts.rightWall.position = a.rightWall.clone();
     },
   },
 
-  // ── Step 4: Horizontal shelf ──────────────────────────────────────
+  // ── Step 4: Dowels for center divider ─────────────────────────────
   {
     id: 4,
+    title: 'Insert Dowels for Divider',
+    description:
+      'Push 2 dowels into the center of the bottom panel. These will hold the bottom-row vertical divider.',
+    animate: async (scene, parts) => {
+      showDowels(parts.dowels, [0, 1]);
+      await animateAll(scene, [0, 1].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] })), 45);
+    },
+    setup: (parts) => {
+      showDowels(parts.dowels, [0, 1]);
+      [0, 1].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
+    },
+  },
+
+  // ── Step 5: Bottom-row divider ────────────────────────────────────
+  {
+    id: 5,
+    title: 'Place Bottom-Row Divider',
+    description:
+      'Lower the short vertical divider onto the dowels between the side walls. This splits the bottom row into two cubes.',
+    animate: async (scene, parts) => {
+      await animatePosition(scene, parts.vDivBottom, a.vDivBottom, 50);
+    },
+    setup: (parts) => {
+      parts.vDivBottom.position = a.vDivBottom.clone();
+    },
+  },
+
+  // ── Step 6: Dowels on top of divider (for shelf) ──────────────────
+  {
+    id: 6,
+    title: 'Insert Dowels on Divider',
+    description:
+      'Push 2 dowels into the top of the divider. These will secure the horizontal shelf.',
+    animate: async (scene, parts) => {
+      showDowels(parts.dowels, [6, 7]);
+      await animateAll(scene, [6, 7].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] })), 45);
+    },
+    setup: (parts) => {
+      showDowels(parts.dowels, [6, 7]);
+      [6, 7].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
+    },
+  },
+
+  // ── Step 7: Horizontal shelf ──────────────────────────────────────
+  {
+    id: 7,
     title: 'Insert Horizontal Shelf',
     description:
-      'Slide the horizontal shelf into position. It sits on the divider and between the side walls, creating two separate rows.',
+      'Slide the horizontal shelf into position. It rests on the divider and side walls, creating two rows.',
     animate: async (scene, parts) => {
       await animatePosition(scene, parts.hShelf, a.hShelf, 55);
     },
@@ -146,49 +189,69 @@ export const assemblySteps: AssemblyStep[] = [
     },
   },
 
-  // ── Step 5: Top-row divider ───────────────────────────────────────
+  // ── Step 8: Dowels on shelf (for top divider) ─────────────────────
   {
-    id: 5,
+    id: 8,
+    title: 'Insert Dowels on Shelf',
+    description:
+      'Push 2 dowels into the top of the horizontal shelf. These will hold the top-row divider.',
+    animate: async (scene, parts) => {
+      showDowels(parts.dowels, [8, 9]);
+      await animateAll(scene, [8, 9].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] })), 45);
+    },
+    setup: (parts) => {
+      showDowels(parts.dowels, [8, 9]);
+      [8, 9].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
+    },
+  },
+
+  // ── Step 9: Top-row divider ───────────────────────────────────────
+  {
+    id: 9,
     title: 'Place Top-Row Divider',
     description:
-      'Insert dowels and place the second short vertical divider above the shelf. This splits the top row into two cubes.',
+      'Lower the second short vertical divider onto the dowels above the shelf. This splits the top row into two cubes.',
     animate: async (scene, parts) => {
-      showDowels(parts.dowels, [8, 9, 10, 11]);
-      await animateAll(scene, [
-        { mesh: parts.vDivTop, target: a.vDivTop },
-        ...([8, 9, 10, 11].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] }))),
-      ], 50);
+      await animatePosition(scene, parts.vDivTop, a.vDivTop, 50);
     },
     setup: (parts) => {
       parts.vDivTop.position = a.vDivTop.clone();
-      showDowels(parts.dowels, [8, 9, 10, 11]);
-      [8, 9, 10, 11].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
     },
   },
 
-  // ── Step 6: Top panel ─────────────────────────────────────────────
+  // ── Step 10: Dowels for top panel ─────────────────────────────────
   {
-    id: 6,
+    id: 10,
+    title: 'Insert Dowels for Top',
+    description:
+      'Push dowels into the top of the divider and the tops of both side walls. These will secure the top panel.',
+    animate: async (scene, parts) => {
+      showDowels(parts.dowels, [10, 11, 12, 13]);
+      await animateAll(scene, [10, 11, 12, 13].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] })), 45);
+    },
+    setup: (parts) => {
+      showDowels(parts.dowels, [10, 11, 12, 13]);
+      [10, 11, 12, 13].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
+    },
+  },
+
+  // ── Step 11: Top panel ────────────────────────────────────────────
+  {
+    id: 11,
     title: 'Attach Top Panel',
     description:
-      'Lower the top panel onto the structure. Press firmly and secure with dowels. The frame is complete!',
+      'Lower the top panel onto all the dowels. Press firmly until flush. The frame is complete!',
     animate: async (scene, parts) => {
-      showDowels(parts.dowels, [12, 13]);
-      await animateAll(scene, [
-        { mesh: parts.top, target: a.top },
-        ...([12, 13].map(i => ({ mesh: parts.dowels[i], target: a.dowels[i] }))),
-      ]);
+      await animatePosition(scene, parts.top, a.top);
     },
     setup: (parts) => {
       parts.top.position = a.top.clone();
-      showDowels(parts.dowels, [12, 13]);
-      [12, 13].forEach(i => { parts.dowels[i].position = a.dowels[i].clone(); });
     },
   },
 
-  // ── Step 7: Complete ──────────────────────────────────────────────
+  // ── Step 12: Complete ─────────────────────────────────────────────
   {
-    id: 7,
+    id: 12,
     title: 'Stand Up & Complete!',
     description:
       'Your KALLAX 2×2 shelf is fully assembled! Stand it upright and enjoy your 4 cubes.',
