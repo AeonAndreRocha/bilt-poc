@@ -283,6 +283,185 @@ body,
   }
 }
 
+/* ── GLB Viewer ────────────────────────────────────────────────── */
+.glb-drop-zone {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 3px dashed #ccc;
+  border-radius: 16px;
+  margin: 24px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.glb-drop-zone:hover,
+.glb-drop-zone.drag-over {
+  border-color: #0058a3;
+  background: rgba(0, 88, 163, 0.04);
+}
+
+.glb-drop-content {
+  text-align: center;
+  user-select: none;
+}
+
+.glb-drop-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.glb-drop-content h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.glb-drop-content p {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.glb-drop-error {
+  color: #d32f2f;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+/* ── GLB Customizer Panel ──────────────────────────────────────── */
+.glb-customizer {
+  gap: 12px;
+}
+
+.glb-section {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.glb-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #555;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.glb-section-toggle:hover {
+  color: #222;
+}
+
+.glb-section-body {
+  padding: 8px 0 4px 4px;
+}
+
+.glb-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  padding: 3px 0;
+  cursor: pointer;
+  color: #444;
+}
+
+.glb-checkbox-row input[type="checkbox"] {
+  accent-color: #0058a3;
+}
+
+.glb-mesh-tree {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.glb-color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.glb-color-row input[type="color"] {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1px;
+  cursor: pointer;
+}
+
+.glb-color-label {
+  flex: 1;
+  font-size: 0.85rem;
+  color: #444;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.glb-inline-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  color: #888;
+  cursor: pointer;
+}
+
+.glb-inline-btn:hover {
+  color: #333;
+  border-color: #aaa;
+}
+
+.glb-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.glb-slider-row label {
+  font-size: 0.82rem;
+  color: #666;
+  min-width: 70px;
+}
+
+.glb-slider-row input[type="range"] {
+  flex: 1;
+  accent-color: #0058a3;
+}
+
+.glb-slider-row span {
+  font-size: 0.78rem;
+  color: #999;
+  min-width: 36px;
+  text-align: right;
+}
+
+.glb-select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: #fff;
+}
+
+.glb-actions {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
 /* ── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 700px) {
   .assembly-viewer {

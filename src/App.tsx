@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { AssemblyViewer } from './components/AssemblyViewer';
 import { LundtoftViewer } from './components/LundtoftViewer';
+import { GlbViewer } from './components/GlbViewer';
 
 function App() {
   const [activeGuide, setActiveGuide] = useState('kallax-2x2');
@@ -12,6 +13,7 @@ function App() {
       <div className="app-content">
         {activeGuide === 'kallax-2x2' && <AssemblyViewer key="kallax" />}
         {activeGuide === 'lundtoft' && <LundtoftViewer key="lundtoft" />}
+        {activeGuide === 'glb-viewer' && <GlbViewer key="glb-viewer" />}
       </div>
     </div>
   );
