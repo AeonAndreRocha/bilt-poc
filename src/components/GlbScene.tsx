@@ -1,8 +1,9 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { HotspotMarker } from './HotspotMarker';
 
 /* ── Types ─────────────────────────────────────────────────────── */
 
@@ -22,10 +23,16 @@ export interface AnimationInfo {
   index: number;
 }
 
+export interface HotspotInfo {
+  id: string;
+  position: [number, number, number];
+}
+
 export interface ModelMetadata {
   meshes: MeshInfo[];
   materials: MaterialInfo[];
   animations: AnimationInfo[];
+  hotspots: HotspotInfo[];
 }
 
 export interface LightingConfig {
@@ -96,8 +103,24 @@ function Model({
         // Store original materials for reset
         const meshes: MeshInfo[] = [];
         const materialSet = new Map<string, MaterialInfo>();
+        const hotspots: HotspotInfo[] = [];
 
         model.traverse((child) => {
+          // Detect hotspot markers (meshes named hotspot_<id>)
+          if (child.name.startsWith('hotspot_')) {
+            const hotspotId = child.name.replace('hotspot_', '');
+            const worldPos = new THREE.Vector3();
+            child.getWorldPosition(worldPos);
+            // Apply the same scale/offset as the model
+            hotspots.push({
+              id: hotspotId,
+              position: [worldPos.x, worldPos.y, worldPos.z],
+            });
+            // Hide the original hotspot geometry
+            child.visible = false;
+            return;
+          }
+
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
             const name = mesh.name || `Mesh_${mesh.uuid.slice(0, 6)}`;
@@ -123,7 +146,7 @@ function Model({
           index: i,
         }));
 
-        onMetadataReady({ meshes, materials: Array.from(materialSet.values()), animations });
+        onMetadataReady({ meshes, materials: Array.from(materialSet.values()), animations, hotspots });
 
         // Animation mixer
         mixerRef.current = new THREE.AnimationMixer(model);
@@ -280,19 +303,41 @@ function Model({
 
 export function GlbScene(props: GlbSceneProps) {
   const { lighting, ...modelProps } = props;
+  const [hotspots, setHotspots] = useState<HotspotInfo[]>([]);
+  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+
+  // Wrap onMetadataReady to also capture hotspots
+  const handleMetadataReady = useCallback(
+    (meta: ModelMetadata) => {
+      setHotspots(meta.hotspots);
+      props.onMetadataReady(meta);
+    },
+    [props.onMetadataReady],
+  );
 
   return (
     <Canvas
       camera={{ position: [3, 2, 3], fov: 50 }}
       style={{ width: '100%', height: '100%' }}
       gl={{ preserveDrawingBuffer: true }}
+      onPointerMissed={() => setActiveHotspot(null)}
     >
       <ambientLight intensity={lighting.ambientIntensity} />
       <directionalLight position={[5, 8, 5]} intensity={lighting.directionalIntensity} castShadow />
       <Environment preset="studio" />
       <gridHelper args={[10, 10, '#ccc', '#eee']} />
       <OrbitControls makeDefault />
-      <Model {...modelProps} />
+      <Model {...modelProps} onMetadataReady={handleMetadataReady} />
+      {hotspots.map((h) => (
+        <HotspotMarker
+          key={h.id}
+          id={h.id}
+          position={h.position}
+          isActive={activeHotspot === h.id}
+          onSelect={(id) => setActiveHotspot((prev) => (prev === id ? null : id))}
+          onClose={() => setActiveHotspot(null)}
+        />
+      ))}
     </Canvas>
   );
 }

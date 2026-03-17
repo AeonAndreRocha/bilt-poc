@@ -462,6 +462,171 @@ body,
   padding-top: 12px;
 }
 
+/* ── Hotspot Popup ─────────────────────────────────────────────── */
+.hotspot-popup {
+  width: 280px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  color: #222;
+  position: relative;
+  animation: hotspot-fade-in 0.2s ease-out;
+}
+
+@keyframes hotspot-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hotspot-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 1;
+  transition: background 0.15s;
+}
+
+.hotspot-popup-close:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.hotspot-popup-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.hotspot-popup-body {
+  padding: 14px 16px 16px;
+}
+
+.hotspot-popup-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.hotspot-popup-desc {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.hotspot-metrics {
+  margin-bottom: 12px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hotspot-metrics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #888;
+  font-weight: 600;
+}
+
+.hotspot-metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+}
+
+.hotspot-metric-row + .hotspot-metric-row {
+  border-top: 1px solid #eee;
+}
+
+.hotspot-metric-label {
+  font-size: 0.82rem;
+  color: #555;
+}
+
+.hotspot-metric-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0058a3;
+  transition: opacity 0.2s;
+}
+
+.hotspot-metric-unit {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #888;
+}
+
+.hotspot-metric-warning .hotspot-metric-value {
+  color: #e67e22;
+}
+
+.hotspot-metric-critical .hotspot-metric-value {
+  color: #e53935;
+}
+
+.hotspot-popup-live-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  background: #e53935;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+  animation: pulse 1s infinite alternate;
+}
+
+.hotspot-popup-details {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hotspot-popup-details tr + tr td {
+  border-top: 1px solid #f0f0f0;
+}
+
+.hotspot-popup-detail-label {
+  font-size: 0.78rem;
+  color: #888;
+  padding: 5px 8px 5px 0;
+  white-space: nowrap;
+}
+
+.hotspot-popup-detail-value {
+  font-size: 0.82rem;
+  color: #333;
+  padding: 5px 0;
+  text-align: right;
+  width: 100%;
+}
+
 /* ── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 700px) {
   .assembly-viewer {
